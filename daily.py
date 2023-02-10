@@ -28,7 +28,7 @@ DAILY_FILENAME = f"es{str(today.year)[2:4]}_MG.epub"
 # https://download-a.akamaihd.net/files/media_publication/11/es20_MG.epub
 # https://download-a.akamaihd.net/files/media_publication/04/es21_MG.epub
 
-PATH = Path.home() / "JW/Document/epub" / DAILY_FILENAME
+PATH = Path.home() / "Downloads" / DAILY_FILENAME
 
 
 DAILY_FILE = ZipFile(PATH)
@@ -119,7 +119,7 @@ def get_text(month=today.month, day=today.day):
 def main():
     db = SqliteDatabase('daily.sqlite')
 
-    class Daily_2021(Model):
+    class Daily_2023(Model):
         month = IntegerField()
         day = IntegerField()
 
@@ -128,17 +128,18 @@ def main():
 
         class Meta:
             database = db
+            db_table = f"daily_{today.year}"
 
     db.connect()
 
-    db.create_tables([Daily_2021])
+    db.create_tables([Daily_2023])
 
     # result = get_text()
     for month in range(1,13):
         for day in range(1, get_month_days(month) + 1):
             result = get_text(month, day)
             print(f"{month} {day} {result[0]} {result[1]}")
-            Daily_2021.create(
+            Daily_2023.create(
                 month=month,
                 day=day,
                 text=result[0],
